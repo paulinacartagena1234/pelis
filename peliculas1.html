@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Películas Almacenadas</title>
+</head>
+
+<body>
+    <h1>Películas Almacenadas</h1>
+
+    <ul id="peliculasAlmacenadas">
+        <!-- Las películas almacenadas se mostrarán aquí -->
+    </ul>
+
+    <script>
+        // Cargar las películas almacenadas en localStorage al cargar la página
+        window.onload = function () {
+            cargarPeliculasAlmacenadas();
+        };
+
+        function cargarPeliculasAlmacenadas() {
+            var peliculasAlmacenadas = localStorage.getItem("listaPeliculas");
+
+            if (peliculasAlmacenadas) {
+                document.getElementById("peliculasAlmacenadas").innerHTML = peliculasAlmacenadas;
+            } else {
+                document.getElementById("peliculasAlmacenadas").innerHTML = "<p>No hay películas almacenadas.</p>";
+            }
+        }
+
+        function actualizarPeliculas() {
+            cargarPeliculasAlmacenadas();
+        }
+    </script>
+</body>
+
+</html>

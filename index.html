@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Películas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #D593E5;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h1 {
+            color: #E6052A;
+            margin-bottom: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .circle {
+            margin-right: 10px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #E6052A;
+            cursor: pointer;
+        }
+
+        input,
+        button {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyA0BGUz7rukkjQuyMTyCMh3DfRb-eXzKO4",
+            authDomain: "peliculaspaupau.firebaseapp.com",
+            projectId: "peliculaspaupau",
+            storageBucket: "peliculaspaupau.appspot.com",
+            messagingSenderId: "729151362684",
+            appId: "1:729151362684:web:25826203e98c680e6edbf9"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+    </script>
+    <h1><i class="fas fa-film" style="color: #E6052A;"></i> Lista de Películas</h1>
+
+    <input type="text" id="nombrePelicula" placeholder="Nombre de la película">
+    <button onclick="agregarPelicula()">Agregar Película</button>
+
+    <ul id="listaPeliculas">
+        <!-- La lista de películas pendientes se mostrará aquí -->
+    </ul>
+
+    <button onclick="eliminarSeleccionados()">Eliminar seleccionados</button>
+
+    <script>
+        // Cargar la lista de películas almacenada en localStorage al cargar la página
+        window.onload = function () {
+            cargarListaPeliculas();
+        };
+
+        function agregarPelicula() {
+            var nombre = document.getElementById("nombrePelicula").value;
+
+            if (nombre) {
+                var lista = document.getElementById("listaPeliculas");
+
+                var li = document.createElement("li");
+                li.innerHTML = `<input type="checkbox" class="checkbox">
+                                <div class="circle" onclick="marcarComoVista(this)"></div>
+                                <span>${nombre}</span>
+                                <i class="fas fa-trash-alt" onclick="eliminarPelicula(this.parentNode)"></i>`;
+
+                lista.appendChild(li);
+
+                // Guardar la lista actualizada en localStorage
+                guardarListaPeliculas();
+
+                // Limpiar campo después de agregar la película
+                document.getElementById("nombrePelicula").value = "";
+            } else {
+                alert("Por favor, ingresa el nombre de la película.");
+            }
+        }
+
+        function marcarComoVista(circle) {
+            circle.style.backgroundColor = "#28a745"; // Cambiar color a verde
+
+            // Guardar la lista actualizada en localStorage
+            guardarListaPeliculas();
+        }
+
+        function eliminarPelicula(li) {
+            var lista = document.getElementById("listaPeliculas");
+            lista.removeChild(li);
+
+            // Guardar la lista actualizada en localStorage
+            guardarListaPeliculas();
+        }
+
+        function eliminarSeleccionados() {
+            var checkboxes = document.querySelectorAll('.checkbox:checked');
+            checkboxes.forEach(function (checkbox) {
+                var listItem = checkbox.parentNode;
+                listItem.parentNode.removeChild(listItem);
+            });
+
+            // Guardar la lista actualizada en localStorage
+            guardarListaPeliculas();
+        }
+
+        function guardarListaPeliculas() {
+            var lista = document.getElementById("listaPeliculas").innerHTML;
+            localStorage.setItem("listaPeliculas", lista);
+
+            // Actualizar la página de películas compartida
+            if (window.opener) {
+                window.opener.actualizarPeliculas();
+            }
+        }
+
+        function cargarListaPeliculas() {
+            var lista = localStorage.getItem("listaPeliculas");
+            if (lista) {
+                document.getElementById("listaPeliculas").innerHTML = lista;
+            }
+        }
+    </script>
+</body>
+
+</html>
